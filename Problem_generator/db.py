@@ -1,5 +1,6 @@
 import os
 import json
+from typing import Optional
 import asyncpg
 from dotenv import load_dotenv
 
@@ -25,6 +26,7 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS problems (
                 id SERIAL PRIMARY KEY,
                 category VARCHAR NOT NULL,
+                subcategory VARCHAR,
                 difficulty VARCHAR NOT NULL,
                 language VARCHAR NOT NULL,
                 style VARCHAR NOT NULL,
@@ -47,18 +49,20 @@ async def save_problem(
     problem_data: dict,
     embedding: list[float],
     generation_model: str,
-    embedding_model: str
+    embedding_model: str,
+    subcategory: Optional[str] = None
 ) -> int:
     """문제 저장 후 생성된 id 반환"""
     conn = await get_connection()
     try:
         row = await conn.fetchrow("""
             INSERT INTO problems
-                (category, difficulty, language, style, problem_data, generation_model, embedding_model, embedding)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                (category, subcategory, difficulty, language, style, problem_data, generation_model, embedding_model, embedding)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING id
         """,
             category,
+            subcategory,
             difficulty,
             language,
             style,

@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Optional
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -21,13 +22,20 @@ def _load_prompt(filename: str, **kwargs) -> str:
     return prompt.format(**kwargs) if kwargs else prompt
 
 
-def generate_problem(category: str, difficulty: str, language: str, style: str) -> dict:
+def generate_problem(
+    category: str,
+    difficulty: str,
+    language: str,
+    style: str,
+    subcategory: Optional[str] = None
+) -> dict:
     client = _get_client()
 
     system_prompt = _load_prompt("system_prompt.md")
     user_prompt = _load_prompt(
         "user_prompt.md",
         category=category,
+        subcategory=subcategory if subcategory else "None",
         difficulty=difficulty,
         language=language,
         style=style
