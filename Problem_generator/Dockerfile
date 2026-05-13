@@ -1,5 +1,11 @@
 FROM python:3.12-slim
 
+# Install compilers for Java and C++ verification
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    default-jdk \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY requirements.txt .

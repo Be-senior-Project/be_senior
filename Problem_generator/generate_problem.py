@@ -28,7 +28,7 @@ def generate_problem(
     language: str,
     style: str,
     subcategory: Optional[str] = None
-) -> dict:
+) -> Optional[dict]:
     client = _get_client()
 
     system_prompt = _load_prompt("system_prompt.md")
@@ -46,7 +46,8 @@ def generate_problem(
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
-        ]
+        ],
+        response_format={"type": "json_object"},
     )
 
     response_text = message.choices[0].message.content
