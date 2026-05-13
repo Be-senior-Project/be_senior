@@ -64,6 +64,8 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 PGADMIN_EMAIL=admin@admin.com
 PGADMIN_PASSWORD=admin
+MAX_COUNT=50
+MAX_CONCURRENT=10
 ```
 
 > ※ Docker Compose로 실행할 때 API 컨테이너는 같은 네트워크의 `db` 호스트명을 사용하므로 `DB_HOST=db` 로 설정합니다. 로컬에서 uvicorn으로 직접 띄울 때는 `DB_HOST=localhost` 로 변경하세요.
@@ -122,7 +124,7 @@ uvicorn main:app --reload
 | difficulty | ✅ | string | 난이도 |
 | language | ✅ | string | 언어 |
 | style | ✅ | string | 문제 스타일 |
-| count | ❌ | integer | 생성 개수 (기본값: 1, 최대: 10) |
+| count | ❌ | integer | 생성 개수 (기본값: 1, 최대: `MAX_COUNT` 환경변수, 기본 50) |
 
 **category / subcategory 옵션:**
 
@@ -215,3 +217,5 @@ JSON 응답 반환
 ```
 
 검증 실패 시 최대 3회 재시도하며, 3회 모두 실패한 문제는 결과에서 제외됩니다. 실패 시 서버 콘솔에 사유(컴파일 에러, 런타임 에러, 시간 초과, 출력 불일치 등)가 출력됩니다.
+
+여러 개를 동시에 생성하면 `MAX_CONCURRENT` 환경변수(기본 10) 만큼 병렬로 처리됩니다.
