@@ -4,7 +4,6 @@ from enum import Enum
 class Category(str, Enum):
     basic = "Basic/Introductory"
     algorithm = "Algorithm/Data Structure"
-    sql = "SQL"
 
 
 class AlgorithmSubcategory(str, Enum):
@@ -20,15 +19,6 @@ class AlgorithmSubcategory(str, Enum):
     graph = "Graph"
 
 
-class SQLSubcategory(str, Enum):
-    select = "SELECT"
-    sum_max_min = "SUM/MAX/MIN"
-    group_by = "GROUP BY"
-    is_null = "IS NULL"
-    join = "JOIN"
-    string_date = "String/Date"
-
-
 class Difficulty(str, Enum):
     level0 = "0"
     level1 = "1"
@@ -39,7 +29,6 @@ class Language(str, Enum):
     python = "Python"
     java = "Java"
     cpp = "C++"
-    sql = "SQL"
 
 
 class Style(str, Enum):
