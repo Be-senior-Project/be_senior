@@ -13,6 +13,8 @@ venv/
 .vscode/
 .idea/
 
+be_senior/
+
 # OS
 .DS_Store
 Thumbs.db
