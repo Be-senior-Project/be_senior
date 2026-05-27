@@ -1,12 +1,14 @@
 import os
 import json
 from typing import Optional
-import asyncpg
-from dotenv import load_dotenv
+import asyncpg # 비동기로 postgreSQL 처리해주는 라이브러리
+from dotenv import load_dotenv # .env 환경 변수 파일을 가져올 수 있게 해주는 라이브러리
 
+# 환경 변수에 .env 파일을 참조하여 환경 변수 설정
 load_dotenv()
 
 
+# postgreSQL DB와 연결
 async def get_connection():
     return await asyncpg.connect(
         host=os.getenv("DB_HOST", "localhost"),
@@ -17,11 +19,12 @@ async def get_connection():
     )
 
 
+# DB 테이블 초기화
 async def init_db():
-    """테이블 초기화 (서버 시작 시 1회 실행)"""
-    conn = await get_connection()
+    conn = await get_connection() # DB와 연결
     try:
-        await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
+        await conn.execute("CREATE EXTENSION IF NOT EXISTS vector") # pgvector table 없을 시 생성
+        # table 없을 경우 생성
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS problems (
                 id SERIAL PRIMARY KEY,
@@ -41,6 +44,7 @@ async def init_db():
         await conn.close()
 
 
+"""문제 저장 후 생성된 id 반환"""
 async def save_problem(
     category: str,
     difficulty: str,
@@ -52,7 +56,6 @@ async def save_problem(
     embedding_model: str,
     subcategory: Optional[str] = None
 ) -> int:
-    """문제 저장 후 생성된 id 반환"""
     conn = await get_connection()
     try:
         row = await conn.fetchrow("""
