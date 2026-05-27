@@ -13,27 +13,38 @@ GPT를 활용하여 프로그래머스 스타일의 코딩 테스트 문제를 �
 ## 프로젝트 구조
 
 ```
-Problem_generator/
-├── main.py                   # FastAPI 앱 및 전체 흐름
-├── generate_problem.py       # GPT 문제 생성
-├── verify_problem.py         # 생성된 문제 검증 진입점
-├── runners/                  # 언어별 코드 실행기
-│   ├── __init__.py
-│   ├── base.py               # 공통 결과 타입, 시그니처 파싱
-│   ├── python_runner.py
-│   ├── java_runner.py
-│   └── cpp_runner.py
-├── embed_problem.py          # 임베딩 생성
-├── db.py                     # PostgreSQL 저장
-├── enums.py                  # 입력값 Enum 정의
-├── Dockerfile                # API 서버 Docker 이미지 (JDK, g++ 포함)
-├── docker-compose.yml        # DB, pgAdmin, API 컨테이너 설정
-├── requirements.txt          # Python 의존성
+be_senior/
+├── app/
+│   ├── main.py                       # FastAPI 앱 진입점
+│   ├── api/
+│   │   └── generate.py               # /generate 라우터
+│   ├── schemas/
+│   │   └── request.py                # 요청/응답 Pydantic 모델
+│   ├── services/
+│   │   ├── generator.py              # GPT 문제 생성
+│   │   ├── verifier.py               # 생성된 문제 검증 진입점
+│   │   ├── embedder.py               # 임베딩 생성
+│   │   ├── problem_service_pipeline.py # 생성→검증→임베딩→저장 파이프라인
+│   │   └── runners/                  # 언어별 코드 실행기
+│   │       ├── base.py               # 공통 결과 타입, 시그니처 파싱
+│   │       ├── python_runner.py
+│   │       ├── java_runner.py
+│   │       └── cpp_runner.py
+│   ├── repositories/
+│   │   └── problem_repo.py           # PostgreSQL 저장
+│   └── core/
+│       ├── config.py                 # 환경변수/상수 로딩
+│       └── enums.py                  # 입력값 Enum 정의
 ├── prompts/
-│   ├── system_prompt.md      # GPT 시스템 프롬프트
-│   └── user_prompt.md        # GPT 유저 프롬프트
-├── .env                      # 환경변수 (git 제외)
-└── .env.example              # 환경변수 예시 (git 포함)
+│   ├── system_prompt.md              # GPT 시스템 프롬프트 (영문)
+│   ├── system_prompt_kr.md           # GPT 시스템 프롬프트 (국문)
+│   ├── user_prompt.md                # GPT 유저 프롬프트 (영문)
+│   └── user_prompt_kr.md             # GPT 유저 프롬프트 (국문)
+├── Dockerfile                        # API 서버 Docker 이미지 (JDK, g++ 포함)
+├── docker-compose.yml                # DB, pgAdmin, API 컨테이너 설정
+├── requirements.txt                  # Python 의존성
+├── .env                              # 환경변수 (git 제외)
+└── .env.example                      # 환경변수 예시 (git 포함)
 ```
 
 ## 시작하기
@@ -42,7 +53,7 @@ Problem_generator/
 
 ```
 git clone https://github.com/Be-senior-Project/be_senior.git
-cd be_senior/Problem_generator
+cd be_senior
 ```
 
 ### 2. 환경변수 설정
@@ -99,15 +110,6 @@ Connection 탭:
   Password: postgres
 ```
 
-### 4. 로컬에서 API만 실행하고 싶다면
-
-```
-pip install -r requirements.txt
-docker-compose up db pgadmin
-uvicorn main:app --reload
-```
-
-> ※ 이 경우 Java/C++ 검증을 위해 로컬에 `javac`, `java`, `g++`가 설치되어 있어야 합니다. Docker로 전체 실행하면 자동 설치됩니다.
 
 ## API 사용법
 
