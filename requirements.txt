@@ -2,4 +2,5 @@ fastapi
 uvicorn
 openai
 asyncpg
+pgvector
 python-dotenv

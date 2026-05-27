@@ -12,3 +12,8 @@ MAX_COUNT = int(os.getenv("MAX_COUNT", "50")) # 한 번에 생성 요청할 수 
 PROMPTS_DIR = BASE_DIR/ "prompts"
 GENERATION_MODEL = os.getenv("GENERATION_MODEL", "gpt-5.4-mini")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+
+# RAG retrieve 시 컨텍스트로 끼울 시드 문제 개수
+RAG_TOP_K = int(os.getenv("RAG_TOP_K", "3"))
+# RAG generator 호출 시 temperature
+RAG_TEMPERATURE = float(os.getenv("RAG_TEMPERATURE", "0.4"))
